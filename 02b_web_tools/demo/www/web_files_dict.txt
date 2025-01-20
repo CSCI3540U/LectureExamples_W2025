@@ -1,0 +1,2 @@
+[2Klogin.html              [Status: 200, Size: 352, Words: 115, Lines: 15, Duration: 49ms][0m
+[2K.                       [Status: 301, Size: 151, Words: 6, Lines: 11, Duration: 20ms][0m
