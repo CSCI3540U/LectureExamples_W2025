@@ -3,6 +3,7 @@ const app = express();
 const port = 9000;
 const fs = require('fs');
 const path = require('path');
+const axios = require('axios');
 
 app.use(express.static('www'));
 
@@ -25,13 +26,36 @@ app.get('/local_file_inclusion', (request, response) => {
 app.get('/directory_traversal', (request, response) => {
     const filename = request.query['page'];
     const file_path = __dirname + '/' + filename;
-    fs.readFile(file_path, (error, data) => {
+    console.log(`filename: ${filename}`)
+    console.log(`file_path: ${file_path}`)
+    fs.realpath(file_path, (error, resolved_path) => {
         if (error) {
             console.error(error);
             return;
         }
-        response.send(data);
+        console.log(`resolved_path = ${resolved_path}`);
+        if (resolved_path.startsWith(__dirname)) {
+            fs.readFile(resolved_path, (error, data) => {
+                if (error) {
+                    console.error(error);
+                    return;
+                }
+                response.send(data);
+            });    
+        } else {
+            console.log(`Trying to access outside dir: ${resolved_path}`);
+        }
     });
+});
+
+app.get('/remote_file_inclusion', async (request, response) => {
+    let url = request.query['page'];
+    try {
+        let url_response = await axios.get(url);
+        response.send(url_response.data);
+    } catch (error) {
+        response.status(500).send(`Error: ${error}`);
+    }
 });
 
 app.listen(port, () => {
