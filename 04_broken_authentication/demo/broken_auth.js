@@ -34,14 +34,18 @@ app.set('view engine', 'pug');
 
 app.get('/home', (request, response) => {
     let sessionId = request.cookies['session_id'];
-    let email = sessionData[sessionId]['email'];
-    let role = sessionData[sessionId]['role'];
-    if (email) {
-        response.send(`Welcome, ${email}! Role: ${role}.`);
-        response.end();
-    } else {
-        response.redirect('/login');
+    console.log(`sessionId = ${sessionId}`);
+
+    if (sessionId) {
+        let email = sessionData[sessionId]['email'];
+        let role = sessionData[sessionId]['role'];
+        if (email) {
+            response.send(`Welcome, ${email}! Role: ${role}.`);
+            response.end();
+            return;
+        }
     }
+    response.redirect('/login');
 });
 
 app.get('/login', (request, response) => {
