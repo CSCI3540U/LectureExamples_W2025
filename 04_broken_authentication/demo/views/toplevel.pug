@@ -1,0 +1,19 @@
+doctype 
+html 
+    head 
+        title= title 
+        link(rel="stylesheet", href="styles/main.css")
+    body 
+        ul(class="menu")
+            li 
+                a(href="/") Home
+            if (email && email !== '')
+                li 
+                    a(href="/logout") Sign Out 
+            else 
+                li 
+                    a(href="/login") Sign In 
+                li 
+                    a(href="/register") Sign Up 
+        block content 
+ 
