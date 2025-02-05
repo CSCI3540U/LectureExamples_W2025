@@ -26,6 +26,10 @@ function checkPassword(email, password) {
     return loginData[email] === password;
 }
 
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 app.use(express.static('static'));
 app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
@@ -59,29 +63,26 @@ app.post('/login', (request, response) => {
     const email = request.body.email;
     const password = request.body.password;
 
-    if (userExists(email)) {
-        if (checkPassword(email, password)) {
-            // login success
-            nextSessionId++;
-            const sessionId = nextSessionId;
-            response.cookie('session_id', sessionId);
-            sessionData[sessionId] = {
-                email: email,
-                role: 'user'
-            };
-            response.redirect('/home');
-        } else {
-            response.status(401).render('/login', {
-                title: 'Please Sign In',
-                errorMessage: 'Password does not match.'
-            });
+    sleep(500).then(() => {
+        if (userExists(email)) {
+            if (checkPassword(email, password)) {
+                // login success
+                nextSessionId++;
+                const sessionId = nextSessionId;
+                response.cookie('session_id', sessionId);
+                sessionData[sessionId] = {
+                    email: email,
+                    role: 'user'
+                };
+                response.redirect('/home');
+                return;
+            }
         }
-    } else {
-        response.status(401).render('/login', {
+        response.status(401).render('login', {
             title: 'Please Sign In',
-            errorMessage: 'No such user exists.'
+            errorMessage: 'Incorrect login.'
         });
-    }
+    });
 });
 
 app.get('/logout', (request, response) => {
