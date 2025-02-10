@@ -90,6 +90,27 @@ app.get('/logout', (request, response) => {
     response.redirect('/login');
 });
 
+// access control
+
+app.get('/profile/:email', (request, response) => {
+    const sessionId = request.cookies['session_id;'];
+    console.log(`sessionId = ${sessionId}`);
+    const email = sessionData[sessionId]['email'];
+    const emailParam = request.params['email'];
+
+    if ((email === emailParam) && (emailParam in loginData)) {
+        response.send(`Ciao ${name}!  Your password is ${loginData[name]}`);
+    } else {
+        response.status(400).send('Invalid username');
+    }
+});
+
+app.get('/order-status', (request, response) => {
+    const orderId = request.query['order-id'];
+
+    response.send(`Viewing order ${orderId}`);
+});
+
 app.listen(port, () => {
     console.log(`Listening on pot ${port}.`)
 });
