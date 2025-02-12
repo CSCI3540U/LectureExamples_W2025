@@ -2,15 +2,17 @@ const express = require('express');
 const app = express();
 const cookieParser = require('cookie-parser');
 const port = 9000;
+const session = require('express-session');
 
-let nextSessionId = 1;
+// let nextSessionId = 1;
 
-let sessionData = {
-    '1': {
-        email: 'admin@abc.com',
-        role: 'administrator'
-    }
-};
+// let sessionData = {
+//     '1': {
+//         email: 'admin@abc.com',
+//         role: 'administrator'
+//     }
+// };
+
 
 let loginData = {
     'admin@abc.com': 'v05!j_R',
@@ -33,21 +35,32 @@ function sleep(ms) {
 app.use(express.static('static'));
 app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
+app.use(session({
+    resave: false,
+    saveUninitialized: false,
+    secret: 'apollo makes great donuts'
+}));
 app.set('views', __dirname + '/views');
 app.set('view engine', 'pug');
 
 app.get('/home', (request, response) => {
-    let sessionId = request.cookies['session_id'];
-    console.log(`sessionId = ${sessionId}`);
+    // let sessionId = request.cookies['session_id'];
+    // console.log(`sessionId = ${sessionId}`);
 
-    if (sessionId) {
-        let email = sessionData[sessionId]['email'];
-        let role = sessionData[sessionId]['role'];
-        if (email) {
-            response.send(`Welcome, ${email}! Role: ${role}.`);
-            response.end();
-            return;
-        }
+    // if (sessionId) {
+    //     let email = sessionData[sessionId]['email'];
+    //     let role = sessionData[sessionId]['role'];
+    //     if (email) {
+    //         response.send(`Welcome, ${email}! Role: ${role}.`);
+    //         response.end();
+    //         return;
+    //     }
+    // }
+    // fix:
+    if (request.session.email) {
+        response.send(`Welcome, ${request.session.email}! Role: ${request.session.role}.`);
+        response.end();
+        return;
     }
     response.redirect('/login');
 });
@@ -67,13 +80,19 @@ app.post('/login', (request, response) => {
         if (userExists(email)) {
             if (checkPassword(email, password)) {
                 // login success
-                nextSessionId++;
-                const sessionId = nextSessionId;
-                response.cookie('session_id', sessionId);
-                sessionData[sessionId] = {
-                    email: email,
-                    role: 'user'
-                };
+                // nextSessionId++;
+                // const sessionId = nextSessionId;
+                // response.cookie('session_id', sessionId);
+                // sessionData[sessionId] = {
+                //     email: email,
+                //     role: 'user'
+                // };
+                // fix:
+                request.session['email'] = email;
+                request.session.role = 'user';
+                if (email === 'admin@abc.com') {
+                    request.session.role = 'admin';
+                }
                 response.redirect('/home');
                 return;
             }
@@ -93,15 +112,17 @@ app.get('/logout', (request, response) => {
 // access control
 
 app.get('/profile/:email', (request, response) => {
-    const sessionId = request.cookies['session_id;'];
-    console.log(`sessionId = ${sessionId}`);
-    const email = sessionData[sessionId]['email'];
+    // const sessionId = request.cookies['session_id;'];
+    // console.log(`sessionId = ${sessionId}`);
+    // const email = sessionData[sessionId]['email'];
+    const email = request.session.email;
+    const role = request.session.role;
     const emailParam = request.params['email'];
 
-    if ((email === emailParam) && (emailParam in loginData)) {
-        response.send(`Ciao ${name}!  Your password is ${loginData[name]}`);
+    if (((email === emailParam) || (role === 'admin')) && (emailParam in loginData)) {
+        response.send(`Ciao ${email}!  Your role is ${role}`);
     } else {
-        response.status(400).send('Invalid username');
+        response.status(400).send('Cannot view profile.');
     }
 });
 
