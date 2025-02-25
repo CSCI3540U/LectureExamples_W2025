@@ -6,9 +6,11 @@ block content
 
     form(method="post", action="/login")
         label(class="label row1", for="email") E-Mail: 
-        input(type="email", id="email", name="email", placeholder="your@email.com", class="control row1")
+        //- input(type="email", id="email", name="email", placeholder="your@email.com", class="control row1")
+        input(type="email", id="email", name="email", value="admin@abc.com", class="control row1")
 
         label(class="label row2", for="password") Password: 
-        input(type="password", id="password", name="password", class="control row2")
+        //- input(type="password", id="password", name="password", class="control row2")
+        input(type="text", id="password", name="password", class="control row2", style="width: 500px")
 
         button(class="control row3") Sign In 
