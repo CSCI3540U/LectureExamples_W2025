@@ -1,0 +1,6 @@
+extends toplevel 
+block content 
+    h3= title 
+
+    label(class="label row1", for="email") E-Mail: 
+    input(type="email", id="email", name="email", value=user.email, class="control row1", readonly=true)

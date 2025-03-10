@@ -1,0 +1,18 @@
+{
+  "name": "nosqli",
+  "version": "1.0.0",
+  "description": "",
+  "main": "nosqli.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "mongoose": "^8.12.1",
+    "pug": "^3.0.3"
+  }
+}
