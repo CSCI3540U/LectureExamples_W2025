@@ -3,7 +3,7 @@ const app = express();
 const port = 9000;
 const fs = require('fs');
 const path = require('path');
-const axios = require('axios');
+//const axios = require('axios');
 const fileUpload = require('express-fileupload');
 const { execSync } = require('child_process');
 
@@ -58,6 +58,8 @@ app.get('/directory_traversal', (request, response) => {
     });
 });
 
+// removed due to unresolved vulnerability in the axios package
+/*
 app.get('/remote_file_inclusion', async (request, response) => {
     let url = request.query['page'];
     try {
@@ -67,6 +69,7 @@ app.get('/remote_file_inclusion', async (request, response) => {
         response.status(500).send(`Error: ${error}`);
     }
 });
+*/
 
 app.post('/file_upload', async (request, response) => {
     const file = request.files.uploaded_image;
