@@ -12,7 +12,7 @@
     "child_process": "^1.0.2",
     "express": "^4.21.2",
     "express-fileupload": "^1.5.1",
-    "formidable": "^3.5.2",
+    "formidable": "^3.5.3",
     "util": "^0.12.5"
   }
 }
